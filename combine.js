@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 document.getElementById('tokenForm').addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -10,7 +10,8 @@ document.getElementById('tokenForm').addEventListener('submit', function (e) {
       document.getElementById("span").innerText = "Name must not contain numbers or special characters.";
     } 
   });
-=======
+
+
 function validateForm(event)
 {
     const numPatients= document.getElementById('num_patient').value;
@@ -38,4 +39,4 @@ function validateForm(event)
     alert("Submitting...");
 
 }
->>>>>>> 82ccf7c3e0038486efe496983685f81b17acf6e7
+
