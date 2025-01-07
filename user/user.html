@@ -4,8 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User</title>
+    <link rel="stylesheet" href="user.css">
 </head>
 <body>
-    
+    <div class="form-container">
+        <h2>Book Your Token</h2>
+        <form id="tokenForm">
+          <label for="name">Name:</label>
+          <input type="text" id="name" placeholder="Enter your name"  required>
+          <span id="span"></span>
+          
+          <label for="problem">Problem Description:</label>
+          <textarea id="problem" placeholder="Describe your problem" required></textarea>
+          
+          <button type="submit" id="bookToken">Book Token</button>
+        </form>
+
+
+        <div id="display-container">
+             
+        </div>
+
+      </div>
+      <script src="../combine.js"></script>
 </body>
 </html>
