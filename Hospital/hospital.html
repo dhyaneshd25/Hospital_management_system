@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital View</title>
+    <script src="../combine.js"></script>
+</head>
+<body>
+    <h1>Patient Management</h1>
+    <form onsubmit="validateForm(event)">
+        <label >Total Number of Patients:</label>
+        <input type="number" name="num_patient" id="num_patient" required><br><br>
+        <label >Refresh Rate:</label>
+        <input type="number" name="Refresh" id="refresh" required><br><br>
+        <label >Waiting Time (in min):</label>
+        <input type="number" name="wait_time" id="wait_time" required><br><br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
