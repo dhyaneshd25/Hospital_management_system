@@ -20,10 +20,16 @@
           <button type="submit" id="bookToken">Book Token</button>
         </form>
 
-
-        <div id="display-container">
-             
-        </div>
+        <div class="live-display">
+            <h2>Live Token Status</h2>
+            <div id="status">
+              <p><strong>Current Token:</strong> <span id="currentToken">-</span></p>
+              <p><strong>Previous Token:</strong> <span id="previousToken">-</span></p>
+              <p><strong>Missing Tokens:</strong> <span id="missingTokens">-</span></p>
+              <p><strong>Patient Limit:</strong> <span id="patientLimit">100</span></p>
+              <p><strong>Estimated Waiting Time:</strong> <span id="waitingTime">0 mins</span></p>
+            </div>
+          </div>
 
       </div>
       <script src="../combine.js"></script>
