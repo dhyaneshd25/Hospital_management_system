@@ -14,11 +14,7 @@ document.getElementById('tokenForm').addEventListener('submit', function (e) {
   let refreshRate;
   
 
-  const data1={
-    patientLimit:numPatients,
-    refreshRate: refreshRate,
-    waitTime: waitTime
-  }
+  const data1={}
   
 
 function validateForm(event)
@@ -45,6 +41,10 @@ function validateForm(event)
         return;
     }
 
+    data1.patientLimit=numPatients
+    data1.refreshRate=refreshRate
+    data1.waitTime=waitTime
+
     fetch("http://localhost:1000/update-settings", {
       method: "POST",
       headers: {
@@ -58,7 +58,7 @@ function validateForm(event)
 
 }
 
-
+  
 
 
 let tokenCounter = 1; 
@@ -95,7 +95,7 @@ function updateDisplay() {
 
 tokenForm.addEventListener("submit", (e) => {
   e.preventDefault();
-
+  console.log(patientLimit)
   if (tokenCounter > patientLimit) {  
     alert("Patient limit reached! No more tokens can be issued today.");
     return;

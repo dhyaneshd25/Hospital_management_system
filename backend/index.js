@@ -14,11 +14,10 @@ let tokenCounter=1;
 let queue=[];
 let missedTokens=[];
 
-global.settings={
-    patientLimit: 100, // Default, can be updated by hospital
-    refreshRate: 10,   // After how many tokens missed tokens get re-prioritized
-    waitTime: 5
-}
+let patientlimit = 4 // Default, can be updated by hospital
+let refreshrate = 2 // After how many tokens missed tokens get re-prioritized
+let waittime = 2
+
 
 app.listen(PORT,()=>{
     console.log(`server running on port ${PORT}`)
@@ -97,7 +96,7 @@ app.get("/token",async(req,res)=>{
 
 app.post("/add-patient",async(req,res)=>{
 try{
-    if (tokenCounter > settings.patientLimit) {
+    if (tokenCounter > patientlimit) {
         return res.status(400).send("Patient limit reached! No more tokens can be issued today.");
     }
     const patient = new tokenlist({
@@ -177,9 +176,9 @@ app.post("/update-settings",async(req,res)=>
 {
     try{
         const { patientLimit, refreshRate, waitTime } = req.body;
-        if (patientLimit) settings.patientLimit = patientLimit;
-        if (refreshRate) settings.refreshRate = refreshRate;
-        if (waitTime) settings.waitTime = waitTime;
+        if (patientLimit) patientlimit = patientLimit;
+        if (refreshRate) refreshrate = refreshRate;
+        if (waitTime) waittime = waitTime;
         try{
          const result = await tokenlist.deleteMany({})
          res.status(200).send("successful deletion....no of documents deleted",result)
