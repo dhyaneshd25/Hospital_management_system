@@ -40,11 +40,21 @@ function validateForm(event)
 
 
 let tokenCounter = 1; 
+function updatetoken(){
+  fetch("http://localhost:1000/token").then(response => response.json()).then(data=>{
+   
+    tokenCounter=data.tokenId
+    console.log(tokenCounter)
+  }).catch(err=>{
+    console.log(err)
+  })
+}
+updatetoken()
 let currentToken = 0;
 let previousToken = 0;
 let missingTokens = [];
-const patientLimit = numPatients; 
-const averageWaitTime = waitTime;
+const patientLimit = 100; 
+const averageWaitTime = 2;
 
 const tokenForm = document.getElementById("tokenForm");
 const currentTokenDisplay = document.getElementById("currentToken");
@@ -81,7 +91,6 @@ tokenForm.addEventListener("submit", (e) => {
   currentToken = tokenCounter;
   const data = {
       patientname : name,
-      token : tokenCounter,
       description : problem,
       status : "Scheuled"
 

@@ -33,7 +33,7 @@ console.log("unable to connect",err)
 
 const schema = new mongoose.Schema({
     patientname: String,
-    token: Number,
+    token: {type :Number, unqiue:true},
     description:String,
     status:{ type:String, default:"Scheduled"}
 })
@@ -86,13 +86,28 @@ async function reprioritizeMissedToken()
     }
 }
 
+app.get("/token",async(req,res)=>{
+    try{
+    
+     res.json({"tokenId":tokenCounter});
+    }catch(err){
+        res.status(500).json({ error: 'An error occurred' });
+    }
+})
+
 app.post("/add-patient",async(req,res)=>{
 try{
     if (tokenCounter > settings.patientLimit) {
         return res.status(400).send("Patient limit reached! No more tokens can be issued today.");
     }
-    const patient = new tokenlist(req.body)
+    const patient = new tokenlist({
+        patientname : req.body.patientname,
+        token : tokenCounter,
+        description : req.body.description,
+        status : req.body.status
+    })
     await patient.save()
+    tokenCounter++;
     res.status(201).send('Patient added successfully');
 } catch (error) {
     console.error('Error adding patient:', error);
@@ -164,7 +179,12 @@ app.post("/update-settings",async(req,res)=>
         if (patientLimit) settings.patientLimit = patientLimit;
         if (refreshRate) settings.refreshRate = refreshRate;
         if (waitTime) settings.waitTime = waitTime;
-
+        try{
+         const result = await tokenlist.deleteMany({})
+         res.status(200).send("successful deletion....no of documents deleted",result)
+        }catch(err){
+            res.status(500).send("error is deletion")
+        }
         console.log("Hospital settings updated:", settings);
         res.status(200).send("Settings updated successfully.");
     }
