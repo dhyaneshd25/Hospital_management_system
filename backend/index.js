@@ -56,14 +56,14 @@ async function markasMissed(tokenId)
     if(patient)
     {
         missedTokens.push(patient.token);
-        console.log(`${tokenId} Marked as missed. `)
+        console.log(`${tokenId} Marked as missed. `);
     }
 }
 
 
 async function checkIn(tokenId)
 {
-    const patient= await tokenlist.findOneAndUpdate({token:tokenId},{status:"Checked In"},{new:true})
+    const patient= await tokenlist.findOneAndUpdate({token:tokenId},{status:"Checked In"},{new:true});
     if(patient)
     {
         console.log(`Checked in ${tokenId}`);
@@ -164,7 +164,8 @@ app.post("/reprioritize",async(req,res)=>{
 
 app.get("/queue-status",async(req,res)=>{
     try{
-        res.status(200).json({ queue, missedTokens, patientLimit: settings.patientLimit, waitTime: settings.waitTime });
+        const updatedQueue= await tokenlist.find({});
+        res.status(200).json({ queue:updatedQueue, missedTokens, patientLimit: settings.patientLimit, waitTime: settings.waitTime });
     }
     catch(error)
     {

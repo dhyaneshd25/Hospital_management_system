@@ -192,7 +192,7 @@ function createPatientRow(patient) {
 
   if (patient.status === "Checked In") {
     patientDiv.style.color = "green";
-  } else if (patient.status === "missed") {
+  } else if (patient.status === "missing") {
     patientDiv.style.color = "red";
   }
   
