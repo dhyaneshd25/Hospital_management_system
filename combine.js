@@ -180,20 +180,26 @@ function createPatientRow(patient) {
   patientInfo.textContent = `Token ${patient.token}: ${patient.patientname} (${patient.description}) - Status: ${patient.status}`;
   patientDiv.appendChild(patientInfo);
 
-  
   const checkInButton = document.createElement("button");
   checkInButton.textContent = "Check-In";
   checkInButton.onclick = () => checkIn(patient.token);
   patientDiv.appendChild(checkInButton);
-
 
   const markMissedButton = document.createElement("button");
   markMissedButton.textContent = "Mark as Missed";
   markMissedButton.onclick = () => markAsMissed(patient.token);
   patientDiv.appendChild(markMissedButton);
 
+  if (patient.status === "Checked In") {
+    patientDiv.style.color = "green";
+  } else if (patient.status === "missed") {
+    patientDiv.style.color = "red";
+  }
+  
+
   return patientDiv;
 }
+
 
 
 function checkIn(token) {
@@ -229,6 +235,12 @@ function markAsMissed(token) {
     .catch((error) => console.error("Error marking token as missed:", error));
 }
 
+function refreshQueue()
+{
+  getDetails();
+}
+
+
 function update()
 {
   fetch("http://localhost:1000/update-settings", {
@@ -239,3 +251,4 @@ function update()
     body: JSON.stringify(data1),
   })
 }
+
