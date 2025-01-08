@@ -50,9 +50,10 @@ async function initializeToken()
     console.log(`Token counter initialized to ${tokenCounter}`)
 }
 
+
 async function markasMissed(tokenId)
 {
-    const patient= await tokenlist.findOneAndUpdate({token:tokenId},{status:"missing"},{new:true});
+    const patient= await tokenlist.findOneAndUpdate({token:tokenId},{status:"missed"},{new:true});
     if(patient)
     {
         missedTokens.push(patient.token);
@@ -164,13 +165,14 @@ app.post("/reprioritize",async(req,res)=>{
 
 app.get("/queue-status",async(req,res)=>{
     try{
-        res.status(200).json({ queue, missedTokens, patientLimit: settings.patientLimit, waitTime: settings.waitTime });
+        const updatedQueue= await tokenlist.find({});
+        res.status(200).json({ queue: updatedQueue,missedTokens, patientLimit: settings.patientLimit, waitTime: settings.waitTime });
     }
     catch(error)
     {
         console.error("Error retrieving queue status:", error);
         res.status(500).send("Error retrieving queue status.");
-    }
+    }   
 })
 
 app.post("/update-settings",async(req,res)=>
@@ -195,3 +197,4 @@ app.post("/update-settings",async(req,res)=>
         res.status(500).send("Error updating settings.");
     }
 })
+
