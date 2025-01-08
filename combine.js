@@ -64,7 +64,7 @@ function updateDisplay() {
 tokenForm.addEventListener("submit", (e) => {
   e.preventDefault();
 
-  if (tokenCounter > patientLimit) {
+  if (tokenCounter > patientLimit) {  
     alert("Patient limit reached! No more tokens can be issued today.");
     return;
   }
@@ -103,5 +103,4 @@ tokenForm.addEventListener("submit", (e) => {
 
 
 updateDisplay();
-
 
