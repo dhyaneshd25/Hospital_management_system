@@ -55,7 +55,7 @@ async function markasMissed(tokenId)
     const patient= await tokenlist.findOneAndUpdate({token:tokenId},{status:"missing"},{new:true});
     if(patient)
     {
-        missedTokens.push(patient.token);
+        missedTokens.push(patient);
         console.log(`${tokenId} Marked as missed. `)
     }
 }
@@ -195,3 +195,4 @@ app.post("/update-settings",async(req,res)=>
         res.status(500).send("Error updating settings.");
     }
 })
+
