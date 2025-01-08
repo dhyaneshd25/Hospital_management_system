@@ -55,15 +55,20 @@ async function markasMissed(tokenId)
     const patient= await tokenlist.findOneAndUpdate({token:tokenId},{status:"missing"},{new:true});
     if(patient)
     {
+<<<<<<< HEAD
         missedTokens.push(patient);
         console.log(`${tokenId} Marked as missed. `)
+=======
+        missedTokens.push(patient.token);
+        console.log(`${tokenId} Marked as missed. `);
+>>>>>>> 0ffa9bdb50271327b6e2aaa68c1378e5a18a2ef2
     }
 }
 
 
 async function checkIn(tokenId)
 {
-    const patient= await tokenlist.findOneAndUpdate({token:tokenId},{status:"Checked In"},{new:true})
+    const patient= await tokenlist.findOneAndUpdate({token:tokenId},{status:"Checked In"},{new:true});
     if(patient)
     {
         console.log(`Checked in ${tokenId}`);
@@ -164,7 +169,8 @@ app.post("/reprioritize",async(req,res)=>{
 
 app.get("/queue-status",async(req,res)=>{
     try{
-        res.status(200).json({ queue, missedTokens, patientLimit: settings.patientLimit, waitTime: settings.waitTime });
+        const updatedQueue= await tokenlist.find({});
+        res.status(200).json({ queue:updatedQueue, missedTokens, patientLimit: settings.patientLimit, waitTime: settings.waitTime });
     }
     catch(error)
     {
