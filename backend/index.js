@@ -107,6 +107,7 @@ try{
         status : req.body.status
     })
     await patient.save()
+    queue.push(patient)
     tokenCounter++;
     res.status(201).send('Patient added successfully');
 } catch (error) {
