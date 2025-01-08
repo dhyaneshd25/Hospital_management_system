@@ -14,10 +14,11 @@ let tokenCounter=1;
 let queue=[];
 let missedTokens=[];
 
-let patientlimit = 4 // Default, can be updated by hospital
-let refreshrate = 2 // After how many tokens missed tokens get re-prioritized
-let waittime = 2
-
+global.settings={
+    patientLimit: 100, // Default, can be updated by hospital
+    refreshRate: 10,   // After how many tokens missed tokens get re-prioritized
+    waitTime: 5
+}
 
 app.listen(PORT,()=>{
     console.log(`server running on port ${PORT}`)
@@ -49,10 +50,9 @@ async function initializeToken()
     console.log(`Token counter initialized to ${tokenCounter}`)
 }
 
-
 async function markasMissed(tokenId)
 {
-    const patient= await tokenlist.findOneAndUpdate({token:tokenId},{status:"missed"},{new:true});
+    const patient= await tokenlist.findOneAndUpdate({token:tokenId},{status:"missing"},{new:true});
     if(patient)
     {
         missedTokens.push(patient.token);
@@ -97,7 +97,7 @@ app.get("/token",async(req,res)=>{
 
 app.post("/add-patient",async(req,res)=>{
 try{
-    if (tokenCounter > patientlimit) {
+    if (tokenCounter > settings.patientLimit) {
         return res.status(400).send("Patient limit reached! No more tokens can be issued today.");
     }
     const patient = new tokenlist({
@@ -164,23 +164,22 @@ app.post("/reprioritize",async(req,res)=>{
 
 app.get("/queue-status",async(req,res)=>{
     try{
-        const updatedQueue= await tokenlist.find({});
-        res.status(200).json({ queue: updatedQueue,missedTokens, patientLimit: settings.patientLimit, waitTime: settings.waitTime });
+        res.status(200).json({ queue, missedTokens, patientLimit: settings.patientLimit, waitTime: settings.waitTime });
     }
     catch(error)
     {
         console.error("Error retrieving queue status:", error);
         res.status(500).send("Error retrieving queue status.");
-    }   
+    }
 })
 
 app.post("/update-settings",async(req,res)=>
 {
     try{
         const { patientLimit, refreshRate, waitTime } = req.body;
-        if (patientLimit) patientlimit = patientLimit;
-        if (refreshRate) refreshrate = refreshRate;
-        if (waitTime) waittime = waitTime;
+        if (patientLimit) settings.patientLimit = patientLimit;
+        if (refreshRate) settings.refreshRate = refreshRate;
+        if (waitTime) settings.waitTime = waitTime;
         try{
          const result = await tokenlist.deleteMany({})
          res.status(200).send("successful deletion....no of documents deleted",result)
@@ -196,4 +195,3 @@ app.post("/update-settings",async(req,res)=>
         res.status(500).send("Error updating settings.");
     }
 })
-
