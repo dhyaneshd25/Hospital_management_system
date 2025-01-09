@@ -1,20 +1,37 @@
+document.addEventListener("DOMContentLoaded", function () {
+  // Form submission logic
+  const tokenForm = document.getElementById("tokenForm");
+  tokenForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const nameInput = document.getElementById("name").value.trim();
+      const problemInput = document.getElementById("problem").value.trim();
+      const nameRegex = /^[a-zA-Z\s]+$/;
 
-document.getElementById('tokenForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-    const nameInput = document.getElementById('name').value.trim();
-    const nameRegex = /^[a-zA-Z\s]+$/;
-    console.log(nameInput)
-    if (!nameRegex.test(nameInput)) {
-      document.getElementById("span").innerText = "Name must not contain numbers or special characters.";
-    } 
+      if (!nameRegex.test(nameInput)) {
+          document.getElementById("span").innerText = "Name must not contain numbers or special characters.";
+          return;
+      }
+
+      if (!problemInput) {
+          alert("Problem description is required.");
+          return;
+      }
+
+      alert(`Token booked successfully for ${nameInput}.`);
+      tokenForm.reset();
   });
+});
+
 
   let numPatients;
   let waitTime;
   let refreshRate;
   
 
-  const data1={}
+  const data1={
+    patientLimit: 10,
+    refreshRate: 5,
+    waitTime: 15};
   
 
 function validateForm(event)
@@ -53,7 +70,7 @@ function validateForm(event)
       body: JSON.stringify(data1),
     })
 
-
+    posthospitalprimarydetails(data1);
     alert("Submitting...");
 
 }
@@ -64,7 +81,6 @@ function validateForm(event)
 let tokenCounter = 1; 
 function updatetoken(){
   fetch("http://localhost:1000/token").then(response => response.json()).then(data=>{
-   
     tokenCounter=data.tokenId
     console.log(tokenCounter)
   }).catch(err=>{
@@ -77,6 +93,7 @@ let previousToken = 0;
 let missingTokens = [];
 const patientLimit = numPatients; 
 const averageWaitTime = waitTime;
+const refreshrate = refreshRate;
 
 const tokenForm = document.getElementById("tokenForm");
 const currentTokenDisplay = document.getElementById("currentToken");
@@ -241,14 +258,38 @@ function refreshQueue()
 }
 
 
-function update()
-{
+function update() {
   fetch("http://localhost:1000/update-settings", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data1),
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data1), 
+  })
+  .then(response => response.text())
+  .then(message => alert(message))
+  .catch(error => console.error("Error updating settings:", error));
+}
+
+
+function gethospitalprimarydetails(){
+  fetch("http://localhost:1000/get-hospital-details").then(res=>{
+   res.json();
+  }).then(data=>{
+   patientLimit=data.patientLimit
+   averageWaitTime = data.waitTime;
+    refreshrate=data.refreshRate
+   
   })
 }
 
+function posthospitalprimarydetails(d){
+ 
+  fetch("http://localhost:1000/add-hospital-details", {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+    },
+    body:JSON.stringify(d),
+  })
+}

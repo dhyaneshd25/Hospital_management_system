@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hospital View</title>
-    <script src="../combine.js"></script>
+    
 </head>
 <body>
     <h1>Patient Management</h1>
@@ -22,10 +22,12 @@
 
     <h3>Patient Details</h3>
     <button onclick="getDetails()">Get Details</button>
-    <button onclick="update()">Refresh</button>
-    <button onclick="refreshQueue()">Refresh Queue</button>
+    <!-- <button onclick="update()">Refresh</button> -->
+    <!-- <button onclick="refreshQueue()">Refresh Queue</button> -->
+    <button type="button" id="refreshButton" onclick="update()">Refresh Queue</button>
 
     
 
+    <script src="../combine.js"></script>
 </body>
 </html>
