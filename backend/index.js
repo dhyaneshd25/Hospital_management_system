@@ -55,13 +55,13 @@ async function markasMissed(tokenId)
     const patient= await tokenlist.findOneAndUpdate({token:tokenId},{status:"missing"},{new:true});
     if(patient)
     {
-<<<<<<< HEAD
+
         missedTokens.push(patient);
         console.log(`${tokenId} Marked as missed. `)
-=======
+
         missedTokens.push(patient.token);
         console.log(`${tokenId} Marked as missed. `);
->>>>>>> 0ffa9bdb50271327b6e2aaa68c1378e5a18a2ef2
+
     }
 }
 

@@ -1,20 +1,11 @@
-
-document.getElementById('tokenForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-    const nameInput = document.getElementById('name').value.trim();
-    const nameRegex = /^[a-zA-Z\s]+$/;
-    console.log(nameInput)
-    if (!nameRegex.test(nameInput)) {
-      document.getElementById("span").innerText = "Name must not contain numbers or special characters.";
-    } 
-  });
-
   let numPatients;
   let waitTime;
   let refreshRate;
   
 
-  const data1={}
+  const data1={ patientLimit:numPatients,
+    refreshRate:refreshRate,
+    waitTime:waitTime}
   
 
 function validateForm(event)
@@ -41,9 +32,7 @@ function validateForm(event)
         return;
     }
 
-    data1.patientLimit=numPatients
-    data1.refreshRate=refreshRate
-    data1.waitTime=waitTime
+   
 
     fetch("http://localhost:1000/update-settings", {
       method: "POST",
@@ -95,6 +84,13 @@ function updateDisplay() {
 
 tokenForm.addEventListener("submit", (e) => {
   e.preventDefault();
+ 
+    const nameInput = document.getElementById('name').value.trim();
+    const nameRegex = /^[a-zA-Z\s]+$/;
+    console.log(nameInput)
+    if (!nameRegex.test(nameInput)) {
+      document.getElementById("span").innerText = "Name must not contain numbers or special characters.";
+    } 
   console.log(patientLimit)
   if (tokenCounter > patientLimit) {  
     alert("Patient limit reached! No more tokens can be issued today.");
