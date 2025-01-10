@@ -8,16 +8,18 @@
 </head>
 <body>
     <h2>Book Your Token</h2>
+
         <form id="tokenForm">
           <label for="name">Name:</label>
           <input type="text" id="name" placeholder="Enter your name"  required>
           <span id="span"></span>
           
           <label for="problem">Problem Description:</label>
-          <textarea id="problem" placeholder="Describe your problem" required></textarea>
+          <textarea id="problem" placeholder="Describe your problem" required></textarea><br><br>
           
           <button type="submit" id="bookToken">Book Token</button>
         </form>
+
         <div class="live-display">
             <h2>Live Token Status</h2>
             <div id="status">
@@ -27,7 +29,9 @@
               <p><strong>Patient Limit:</strong> <span id="patientLimit">100</span></p>
               <p><strong>Estimated Waiting Time:</strong> <span id="waitingTime">0 mins</span></p>
             </div>
-          </div>
+        </div>
+
+      
     <h1>Patient Management</h1>
     <form onsubmit="validateForm(event)">
         <label >Total Number of Patients:</label>

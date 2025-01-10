@@ -1,14 +1,9 @@
 let numPatients;
-  let waitTime;
-  let refreshRate;
+let waitTime;
+let refreshRate;
   
-
-
+const data1={}
   
-
-  const data1={}
-  
-
 function validateForm(event)
 {
   numPatients= document.getElementById('num_patient').value;
@@ -49,7 +44,7 @@ function validateForm(event)
     })
 
     posthospitalprimarydetails(data1);
-    alert("Submitting...");
+    alert("Click here to submit");
 
 }
 

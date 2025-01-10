@@ -18,7 +18,7 @@ let missedTokens=[];
 global.settings={
     patientLimit: 100, // Default, can be updated by hospital
     refreshRate: 10,   // After how many tokens missed tokens get re-prioritized
-    waitTime: 5
+    waitTime: 50
 }
 
 app.listen(PORT,()=>{
@@ -47,6 +47,9 @@ async function initializeToken()
     if(latestPatient)
     {
         tokenCounter=latestPatient.token+1;
+    }
+    else{
+        tokenCounter=1;
     }
     console.log(`Token counter initialized to ${tokenCounter}`)
 }
@@ -94,7 +97,6 @@ async function reprioritizeMissedToken()
 
 app.get("/token",async(req,res)=>{
     try{
-    
      res.json({"tokenId":tokenCounter});
     }catch(err){
         res.status(500).json({ error: 'An error occurred' });
@@ -192,10 +194,16 @@ app.post("/update-settings", async (req, res) => {
         if (waitTime) settings.waitTime = waitTime;
 
         
+        // Step 1: Clear all documents from the token queue
         const result = await tokenlist.deleteMany({});
         console.log(`${result.deletedCount} documents deleted.`);
         
-        initializeToken();
+        // Step 2: Clear the missed token
+        missedTokens.length=0;
+        console.log(`${missedTokens} missed entries cleared.`);
+
+        // Step 3: Initialize the token counter
+        await initializeToken();
 
         console.log("Hospital settings updated:", settings);
         res.status(200).send("Settings updated and database cleared successfully.");
@@ -213,7 +221,6 @@ const schema1 = new mongoose.Schema({
     waitTime:Number,
    
 })
-
 
 const hospitaldetails = mongoose.model("Primary Details",schema1)
 
