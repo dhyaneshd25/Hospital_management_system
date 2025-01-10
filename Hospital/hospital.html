@@ -4,10 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hospital View</title>
-    <script src="../combine.js"></script>
-    <script src="../backend/index.js"></script>
+   
 </head>
 <body>
+    <h2>Book Your Token</h2>
+        <form id="tokenForm">
+          <label for="name">Name:</label>
+          <input type="text" id="name" placeholder="Enter your name"  required>
+          <span id="span"></span>
+          
+          <label for="problem">Problem Description:</label>
+          <textarea id="problem" placeholder="Describe your problem" required></textarea>
+          
+          <button type="submit" id="bookToken">Book Token</button>
+        </form>
+        <div class="live-display">
+            <h2>Live Token Status</h2>
+            <div id="status">
+              <p><strong>Current Token:</strong> <span id="currentToken">-</span></p>
+              <p><strong>Previous Token:</strong> <span id="previousToken">-</span></p>
+              <p><strong>Missing Tokens:</strong> <span id="missingTokens">-</span></p>
+              <p><strong>Patient Limit:</strong> <span id="patientLimit">100</span></p>
+              <p><strong>Estimated Waiting Time:</strong> <span id="waitingTime">0 mins</span></p>
+            </div>
+          </div>
     <h1>Patient Management</h1>
     <form onsubmit="validateForm(event)">
         <label >Total Number of Patients:</label>
@@ -23,10 +43,12 @@
 
     <h3>Patient Details</h3>
     <button onclick="getDetails()">Get Details</button>
-    <button onclick="update()">Refresh</button>
-    <button onclick="refreshQueue()">Refresh Queue</button>
+    <!-- <button onclick="update()">Refresh</button> -->
+    <!-- <button onclick="refreshQueue()">Refresh Queue</button> -->
+    <button type="button" id="refreshButton" onclick="update()">Refresh Queue</button>
 
     
 
+    <script src="../combine.js"></script>
 </body>
 </html>

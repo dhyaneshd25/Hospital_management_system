@@ -1,5 +1,6 @@
 const express=require("express")
 const mongoose=require("mongoose")
+const path = require('path');
 const cors=require("cors")
 
 require("dotenv").config()
@@ -33,7 +34,7 @@ console.log("unable to connect",err)
 
 const schema = new mongoose.Schema({
     patientname: String,
-    token: {type :Number, unqiue:true},
+    token: {type :Number, unique:true},
     description:String,
     status:{ type:String, default:"Scheduled"}
 })
@@ -104,6 +105,10 @@ app.post("/add-patient",async(req,res)=>{
 try{
     if (tokenCounter > settings.patientLimit) {
         return res.status(400).send("Patient limit reached! No more tokens can be issued today.");
+    }
+    const co=await tokenlist.countDocuments();
+    if(co==0){
+        initializeToken()
     }
     const patient = new tokenlist({
         patientname : req.body.patientname,
@@ -179,26 +184,62 @@ app.get("/queue-status",async(req,res)=>{
     }
 })
 
-app.post("/update-settings",async(req,res)=>
-{
-    try{
+app.post("/update-settings", async (req, res) => {
+    try {
         const { patientLimit, refreshRate, waitTime } = req.body;
         if (patientLimit) settings.patientLimit = patientLimit;
         if (refreshRate) settings.refreshRate = refreshRate;
         if (waitTime) settings.waitTime = waitTime;
-        try{
-         const result = await tokenlist.deleteMany({})
-         res.status(200).send("successful deletion....no of documents deleted",result)
-        }catch(err){
-            res.status(500).send("error is deletion")
-        }
+
+        
+        const result = await tokenlist.deleteMany({});
+        console.log(`${result.deletedCount} documents deleted.`);
+        
+        initializeToken();
+
         console.log("Hospital settings updated:", settings);
-        res.status(200).send("Settings updated successfully.");
-    }
-    catch(error)
-    {
+        res.status(200).send("Settings updated and database cleared successfully.");
+    } catch (error) {
         console.error("Error updating settings:", error);
         res.status(500).send("Error updating settings.");
     }
+});
+
+
+
+const schema1 = new mongoose.Schema({
+    patientLimit: Number,
+    refreshRate: Number,
+    waitTime:Number,
+   
 })
 
+
+const hospitaldetails = mongoose.model("Primary Details",schema1)
+
+app.post('/add-hospital-details',async (req,res)=>{
+    try{
+        const {patientLimit,refreshRate,waitTime}=req.body
+        const data2 ={
+            patientLimit:patientLimit,
+            refreshRate:refreshRate,
+            waitTime:waitTime
+        }
+
+        const hospitaldetail =new hospitaldetails(data2)
+        hospitaldetail.save()
+        console.log("Hospital details added successfully");
+        res.status(200).send("Hospital details added successfully");
+    }catch(err){
+        res.status(500).send("Internal Server error")
+    }
+})
+
+app.get('/get-hospital-details',async(req,res)=>{
+    try{
+        const data3=hospitaldetails.findOne()
+        res.status(200).json(data3)
+    }catch(err){
+        res.status(500).send("Internal Server error")
+    }
+})

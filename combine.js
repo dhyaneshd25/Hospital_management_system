@@ -1,11 +1,12 @@
-  let numPatients;
+let numPatients;
   let waitTime;
   let refreshRate;
   
 
-  const data1={ patientLimit:numPatients,
-    refreshRate:refreshRate,
-    waitTime:waitTime}
+
+  
+
+  const data1={}
   
 
 function validateForm(event)
@@ -14,6 +15,11 @@ function validateForm(event)
   refreshRate = document.getElementById('refresh').value;
   waitTime = document.getElementById('wait_time').value;
 
+  data1={
+    patientLimit : numPatients,
+    refreshRate : refreshRate,
+    waitTime :waitTime
+  }
     if(numPatients==='' || isNaN(numPatients) || numPatients<=0)
     {
         alert("Please enter the valid number of patients:");
@@ -42,7 +48,7 @@ function validateForm(event)
       body: JSON.stringify(data1),
     })
 
-
+    posthospitalprimarydetails(data1);
     alert("Submitting...");
 
 }
@@ -53,19 +59,20 @@ function validateForm(event)
 let tokenCounter = 1; 
 function updatetoken(){
   fetch("http://localhost:1000/token").then(response => response.json()).then(data=>{
-   
     tokenCounter=data.tokenId
     console.log(tokenCounter)
   }).catch(err=>{
     console.log(err)
   })
 }
-updatetoken()
+
 let currentToken = 0;
 let previousToken = 0;
 let missingTokens = [];
+updatetoken()
 const patientLimit = numPatients; 
 const averageWaitTime = waitTime;
+const refreshrate = refreshRate;
 
 const tokenForm = document.getElementById("tokenForm");
 const currentTokenDisplay = document.getElementById("currentToken");
@@ -75,15 +82,16 @@ const patientLimitDisplay = document.getElementById("patientLimit");
 const waitingTimeDisplay = document.getElementById("waitingTime");
 
 function updateDisplay() {
-  currentTokenDisplay.textContent = currentToken || "-";
-  previousTokenDisplay.textContent = previousToken || "-";
-  missingTokensDisplay.textContent = missingTokens.join(", ") || "-";
+  console.log(currentToken)
+  currentTokenDisplay.textContent = `${currentToken}` || "-";
+  previousTokenDisplay.textContent = `${previousToken}` || "-";
+  missingTokensDisplay.textContent = `${missingTokens.join(", ")}` || "-";
   patientLimitDisplay.textContent = patientLimit;
   waitingTimeDisplay.textContent = `${(tokenCounter - currentToken - 1) * averageWaitTime} mins`;
 }
 
-tokenForm.addEventListener("submit", (e) => {
-  e.preventDefault();
+tokenForm.addEventListener("submit", () => {
+  
  
     const nameInput = document.getElementById('name').value.trim();
     const nameRegex = /^[a-zA-Z\s]+$/;
@@ -120,6 +128,8 @@ tokenForm.addEventListener("submit", (e) => {
        'Content-Type': 'application/json',
     },
     body:JSON.stringify(data)
+  }).then(resp=>resp.json()).then(data=>{
+    console.log(data)
   })
   tokenCounter++;
   updateDisplay();
@@ -237,14 +247,38 @@ function refreshQueue()
 }
 
 
-function update()
-{
+function update() {
   fetch("http://localhost:1000/update-settings", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data1),
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data1), 
+  })
+  .then(response => response.text())
+  .then(message => alert(message))
+  .catch(error => console.error("Error updating settings:", error));
+}
+
+
+function gethospitalprimarydetails(){
+  fetch("http://localhost:1000/get-hospital-details").then(res=>{
+   res.json();
+  }).then(data=>{
+   patientLimit=data.patientLimit
+   averageWaitTime = data.waitTime;
+    refreshrate=data.refreshRate
+   
   })
 }
 
+function posthospitalprimarydetails(d){
+ 
+  fetch("http://localhost:1000/add-hospital-details", {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+    },
+    body:JSON.stringify(d),
+  })
+}
