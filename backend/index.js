@@ -206,10 +206,10 @@ app.post("/update-settings", async (req, res) => {
         await initializeToken();
 
         console.log("Hospital settings updated:", settings);
-        res.status(200).send("Settings updated and database cleared successfully.");
+        res.status(200).json({ message: 'Settings updated' });
     } catch (error) {
         console.error("Error updating settings:", error);
-        res.status(500).send("Error updating settings.");
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
@@ -236,9 +236,9 @@ app.post('/add-hospital-details',async (req,res)=>{
         const hospitaldetail =new hospitaldetails(data2)
         hospitaldetail.save()
         console.log("Hospital details added successfully");
-        res.status(200).send("Hospital details added successfully");
+        res.status(200).json({ message: 'Hospital details added' });
     }catch(err){
-        res.status(500).send("Internal Server error")
+        res.status(500).json({ error: 'Database operation failed' });
     }
 })
 

@@ -6,11 +6,13 @@ const data1={}
   
 function validateForm(event)
 {
+  event.preventDefault();
+
   numPatients= document.getElementById('num_patient').value;
   refreshRate = document.getElementById('refresh').value;
   waitTime = document.getElementById('wait_time').value;
 
-  data1={
+  let data1={
     patientLimit : numPatients,
     refreshRate : refreshRate,
     waitTime :waitTime
@@ -42,6 +44,9 @@ function validateForm(event)
       },
       body: JSON.stringify(data1),
     })
+    .then(response => response.json())
+    .then(data => console.log('Update-settings response:', data))
+    .catch(error => console.error('Error:', error));
 
     posthospitalprimarydetails(data1);
     alert("Click here to submit");
@@ -276,4 +281,7 @@ function posthospitalprimarydetails(d){
     },
     body:JSON.stringify(d),
   })
+  .then(response => response.json())
+  .then(data => console.log('Add-hospital-details response:', data))
+  .catch(error => console.error('Error:', error));
 }
