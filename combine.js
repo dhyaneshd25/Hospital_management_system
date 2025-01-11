@@ -49,6 +49,7 @@ function validateForm(event)
     .catch(error => console.error('Error:', error));
 
     posthospitalprimarydetails(data1);
+    gethospitalprimarydetails();
     alert("Click here to submit");
 
 }
@@ -70,9 +71,9 @@ let currentToken = 0;
 let previousToken = 0;
 let missingTokens = [];
 updatetoken()
-const patientLimit = numPatients; 
-const averageWaitTime = waitTime;
-const refreshrate = refreshRate;
+let patientLimit = numPatients; 
+let averageWaitTime = waitTime;
+let refreshrate = refreshRate;
 
 const tokenForm = document.getElementById("tokenForm");
 const currentTokenDisplay = document.getElementById("currentToken");
@@ -261,16 +262,36 @@ function update() {
 }
 
 
-function gethospitalprimarydetails(){
-  fetch("http://localhost:1000/get-hospital-details").then(res=>{
-   res.json();
-  }).then(data=>{
-   patientLimit=data.patientLimit
-   averageWaitTime = data.waitTime;
-    refreshrate=data.refreshRate
-   
-  })
+// function gethospitalprimarydetails(){
+//   fetch("http://localhost:1000/get-hospital-details").then(res=>{
+//    res.json();
+//   }).then(data=>{
+//    patientLimit=data.patientLimit
+//    averageWaitTime = data.waitTime;
+//     refreshrate=data.refreshRate
+//    console.log(data);
+//   })
+//   .catch(error => console.error('Error:', error));
+// }
+
+function gethospitalprimarydetails() {
+  fetch("http://localhost:1000/get-hospital-details")
+      .then(res => {
+          if (!res.ok) {
+              throw new Error(`HTTP error! status: ${res.status}`);
+          }
+          return res.json(); // Return res.json()
+      })
+      .then(data => {
+          patientLimit = data.patientLimit;
+          averageWaitTime = data.waitTime;
+          refreshrate = data.refreshRate;
+          console.log("Hospital details fetched successfully:", data);
+      })
+      .catch(error => console.error("Error fetching hospital details:", error));
 }
+
+
 
 function posthospitalprimarydetails(d){
  

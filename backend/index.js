@@ -242,11 +242,30 @@ app.post('/add-hospital-details',async (req,res)=>{
     }
 })
 
-app.get('/get-hospital-details',async(req,res)=>{
-    try{
-        const data3=hospitaldetails.findOne()
-        res.status(200).json(data3)
-    }catch(err){
-        res.status(500).send("Internal Server error")
+// app.get('/get-hospital-details',async(req,res)=>{
+//     try{
+//         const data3=hospitaldetails.findOne()
+//         console.log(data3)
+//         res.status(200).json(data3)
+//     }catch(err){
+//         res.status(500).send("Internal Server error")
+//     }
+// })
+
+app.get('/get-hospital-details', async (req, res) => {
+    try {
+        console.log("Fetching hospital details...");
+        const data3 = await hospitaldetails.findOne(); // Await the query result
+        if (!data3) {
+            console.error("No hospital details found in the database.");
+            return res.status(404).send("Hospital details not found");
+        }
+        console.log("Hospital details fetched:", data3);
+        res.status(200).json(data3);
+    } catch (err) {
+        console.error("Error occurred while fetching hospital details:", err.message);
+        console.error("Stack Trace:", err.stack);
+        res.status(500).send("Internal Server Error");
     }
-})
+});
+
